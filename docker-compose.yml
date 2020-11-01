@@ -1,0 +1,35 @@
+version: '3.5'
+
+services:
+  api:
+    container_name: todo.api
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PACKAGE_NAME: api
+    ports:
+      - "8080:${PORT}"
+    depends_on:
+      - mysql
+    networks:
+      - todo
+  mysql:
+    image: mysql:5.7
+    container_name: todo.mysql
+    restart: unless-stopped
+    ports:
+      - "3380:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_USER: ${DB_USER}
+    volumes:
+      - ./deployments/data/mysql:/var/lib/mysql:rw,delegated
+    networks:
+      - todo
+networks:
+  todo:
+    external: true

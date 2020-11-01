@@ -1,0 +1,6 @@
+/vendor
+/data
+.env
+.env.backup
+coverage.out
+*.test
